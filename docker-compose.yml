@@ -1,0 +1,36 @@
+version: "3.7"
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: laravel-lumen-encontrar-resposta
+    container_name: laravel-lumen-encontrar-resposta-app
+    working_dir: /var/www/
+    entrypoint: ["php", "-S", "0.0.0.0:8000", "-t", "/var/www/public/"]
+
+    ports:
+      - "9000:9000"
+      - "8000:8000"
+    volumes:
+      - ./:/var/www
+    networks:
+      - encontrar-resposta-network
+
+  db:
+    image: postgres:latest
+    container_name: encontrar-resposta-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD:  ${DB_PASSWORD}
+      POSTGRES_USER: encontrar-resposta
+      POSTGRES_DB: encontrar-resposta
+    ports:
+      - "15432:5432"
+    networks:
+      -  encontrar-resposta-network
+
+networks:
+  encontrar-resposta-network:
+    driver: bridge
+
